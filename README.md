@@ -12,7 +12,7 @@ Order to run the scripts:
 2. After having done step 1, you can also run `python get-user-mix.py`. This will scan through the classifications DB, referencing the subject/season mapping, and build up arrays of which users were encountered in each season and how many anonymous users were in each season. This will be written to two new pickle files (`known_users.p` and `anon_users_counts.p`).
     1. (optional) You can now run `python validate-known-users.py` which will load the known users file and summarise it.
 
-3. After having done step 4, you can now run `python get-summary.py`. This will load the known users and anon users file and generate a CSV containing the new, returning and anonymous users per season.
+3. After having done step 2, you can now run `python get-summary.py`. This will load the known users and anon users file and generate a CSV containing the new, returning and anonymous users per season.
 
 
 
