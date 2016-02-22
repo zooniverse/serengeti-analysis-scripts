@@ -25,7 +25,7 @@ seasons = {
   6: ObjectId("51f158983ae74082bb000001"),
   7: ObjectId("5331cce91bccd304b6000001"),
   8: ObjectId("54cfc76387ee0404d5000001"),
-  0: ObjectId("55a3d6cf3ae74036bc000001"),
+  0: ObjectId("55a3d6cf3ae74036bc000001"), # lost season
   9: ObjectId("56a63b3b41479b0042000001")
 }
 

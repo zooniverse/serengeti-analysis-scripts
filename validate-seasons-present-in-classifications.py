@@ -66,17 +66,28 @@ season_found = {
 }
 
 # scan through *ALL* classifications and check which seasons present
-for ii, classification in enumerate(classification_collection.find(no_cursor_timeout=True)):  # .skip(skip).limit(limit)
-  # skip tutorial classifications
-  if "tutorial" in classification:
-    continue
-  if ii % 10000 == 0:
-    print ii
-  subject_id = classification["subjects"][0]["zooniverse_id"]
-  season_oid = subject_season_map[subject_id]
-  season_num = get_season_no(season_oid)
-  if not season_found[season_num]:
-    season_found[season_num]=True
+
+pageSize = 100000
+first_classification = classification_collection.find_one()
+completed_page_rows=1
+last_id = first_classification["_id"]
+
+next_results = classification_collection.find({"_id":{"$gt":last_id}},{"subjects":1},no_cursor_timeout=True).limit(pageSize)
+while next_results.count()>0:
+  for ii, classification in enumerate(next_results):
+    # skip tutorial classifications
+    if "tutorial" in classification:
+      continue
+    completed_page_rows+=1
+    if completed_page_rows % pageSize == 0:
+      print "%s (id = %s)" % (completed_page_rows,classification["_id"])
+    subject_id = classification["subjects"][0]["zooniverse_id"]
+    season_oid = subject_season_map[subject_id]
+    season_num = get_season_no(season_oid)
+    if not season_found[season_num]:
+      season_found[season_num]=True
+    last_id = classification["_id"]
+  next_results = classification_collection.find({"_id":{"$gt":last_id}},{"subjects":1},no_cursor_timeout=True).limit(pageSize)
 
 print "\nClassification Season Check Results:\n"
 for season_num,status in season_found.iteritems():
