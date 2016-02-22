@@ -21,8 +21,9 @@ for subject,season in subject_season_map.iteritems():
   season_subject_map[season] += 1
 
 print "Finished re-indexing by season. Counts are:\n"
-for season,subject in season_subject_map.iteritems():
-  print "Season %s has %s subjects" % (season, season_subject_map[season])
+for season_oid,subject in season_subject_map.iteritems():
+  season_num = get_season_no(season_oid)
+  print "Season %s has %s subjects" % (season_num, season_subject_map[season_oid])
 
 
 print "Scanning classifications db..."
