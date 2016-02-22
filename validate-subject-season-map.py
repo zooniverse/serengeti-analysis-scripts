@@ -29,8 +29,8 @@ seasons = {
   6: ObjectId("51f158983ae74082bb000001"),
   7: ObjectId("5331cce91bccd304b6000001"),
   8: ObjectId("54cfc76387ee0404d5000001"),
-  0: ObjectId("55a3d6cf3ae74036bc000001"),
-  9: ObjectId("56a63b3b41479b0042000001")
+  9: ObjectId("55a3d6cf3ae74036bc000001"), # actually Lost Season
+  10: ObjectId("56a63b3b41479b0042000001") # actually Season 9
 }
 
 def get_season_no(oid):
@@ -38,6 +38,10 @@ def get_season_no(oid):
   for i_season, i_oid in seasons.iteritems():
     if oid == i_oid:
       season = i_season
+  if season==10:
+    season=9
+  elif season==9:
+    season="Lost Season"
   return season
 
 print "Finished re-indexing by season. Counts are:\n"

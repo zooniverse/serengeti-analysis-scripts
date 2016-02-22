@@ -4,6 +4,7 @@ import pymongo
 import csv
 import pickle
 from bson.objectid import ObjectId
+from collections import OrderedDict
 
 def create_csv(csv_filename):
   wrfile = open("summaries.csv", 'w')
@@ -25,20 +26,33 @@ seasons = {
   6: ObjectId("51f158983ae74082bb000001"),
   7: ObjectId("5331cce91bccd304b6000001"),
   8: ObjectId("54cfc76387ee0404d5000001"),
-  0: ObjectId("55a3d6cf3ae74036bc000001"), # lost season
-  9: ObjectId("56a63b3b41479b0042000001")
+  9: ObjectId("55a3d6cf3ae74036bc000001"), # actually Lost Season
+  10: ObjectId("56a63b3b41479b0042000001") # actually Season 9
 }
+
+seasons = OrderedDict((season,oid) for season,oid in seasons.iteritems())
 
 def get_season_no(oid):
   season = -1
   for i_season, i_oid in seasons.iteritems():
     if oid == i_oid:
       season = i_season
+  if season==10:
+    season=9
+  elif season==9:
+    season="Lost Season"
   return season
 
+if "mrniaboc" in known_users[seasons[1]]:
+  print "Grant is in season 1"
+elif "mrniaboc" in known_users[seasons[6]]:
+  print "Grant is in season 6"
+else:
+  print "Grant is somewhere else"
+
 for k,v in known_users.iteritems():
-  users = len(v)
   season = get_season_no(k)
+  users = len(v)
   print "Season %s has %s known users" % (season, users)
 
 for k,v in anon_users_counts.iteritems():

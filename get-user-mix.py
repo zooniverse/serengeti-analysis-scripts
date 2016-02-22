@@ -23,20 +23,20 @@ first_classification = classification_collection.find_one()
 completed_page_rows=1
 last_id = first_classification["_id"]
 
-next_results = classification_collection.find({"_id":{"$gt":last_id}},{"user_name":1,"subjects":1},no_cursor_timeout=True).limit(pageSize)
+next_results = classification_collection.find({"_id":{"$gt":last_id}},{"tutorial":1,"user_name":1,"subjects":1},no_cursor_timeout=True).limit(pageSize)
 while next_results.count()>0:
   for ii, classification in enumerate(next_results):
     completed_page_rows+=1
     if completed_page_rows % pageSize == 0:
       print "%s (id = %s)" % (completed_page_rows,classification["_id"])
     last_id = classification["_id"]
-    next_results = classification_collection.find({"_id":{"$gt":last_id}},{"user_name":1,"subjects":1},no_cursor_timeout=True).limit(pageSize)
-    if "tutorial" in classification:
+    next_results = classification_collection.find({"_id":{"$gt":last_id}},{"tutorial":1,"user_name":1,"subjects":1},no_cursor_timeout=True).limit(pageSize)
+    if "tutorial" in classification.keys():
       continue
     else:
       subject_id = classification["subjects"][0]["zooniverse_id"]
       season = subject_season_map[subject_id]
-      if "user_name" in classification:
+      if "user_name" in classification.keys():
         user_name = classification["user_name"]
         if season not in known_users.keys():
           known_users[season]=[]
