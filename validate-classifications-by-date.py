@@ -16,7 +16,8 @@ for ii, classification in enumerate(classification_collection.find(no_cursor_tim
   # skip tutorial classifications
   if "tutorial" in classification:
     continue
-  print "%s: created at %s" % (ii,classification["created_at"])
+  if ii % 10000 == 0 or ii > 10593400:
+    print "%s: created at %s" % (ii,classification["created_at"])
 
 print "\nDone.\n"
 

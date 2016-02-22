@@ -5,6 +5,7 @@ My general approach is that each script will write its output to a pickle file, 
 
 Order to run the scripts:
 
+0. (optional) Run `python validate-classifications-by-date.py`. This has no prereqs, and just tries to find the last known date for which classifications exist. Outputs to screen.
 1. First run `python get-seasons.py`. This generates a mapping of which subject is in each season (`subject_season_map.p`).
 2. (optional) You can now run `python validate-subject-season-map.py` which will load the season map pickle file then summarise it.
 3. (optional) You can now run `python check-seasons-present-in-classifications.py`. This simply checks which seasons' images have got classifications present, and outputs the results to the screen.
