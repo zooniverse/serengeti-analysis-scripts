@@ -2,6 +2,7 @@
 __author__ = 'alex'
 import pymongo
 import pickle
+from bson.objectid import ObjectId
 
 # load pickle file
 print "Loading season mapping pickle file...\n"
