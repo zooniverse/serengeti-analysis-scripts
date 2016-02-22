@@ -9,13 +9,14 @@ client = pymongo.MongoClient()
 db = client['serengeti3']
 classification_collection = db["serengeti_classifications"]
 
+print "Collection contains %s documents." % db.command("collstats", "serengeti_classifications")["count"]
+
 # scan through *ALL* classifications and check which seasons present
-for ii, classification in enumerate(classification_collection.find(no_cursor_timeout=True).skip(10000000)):  # .skip(skip).limit(limit)
+for ii, classification in enumerate(classification_collection.find(no_cursor_timeout=True).skip(10590000)):  # .skip(skip).limit(limit)
   # skip tutorial classifications
   if "tutorial" in classification:
     continue
-  if ii % 10000 == 0:
-    print "%s: created at %s" % (ii,classification["created_at"])
+  print "%s: created at %s" % (ii,classification["created_at"])
 
 print "\nDone.\n"
 
