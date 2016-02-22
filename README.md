@@ -8,10 +8,10 @@ Order to run the scripts:
 0. (optional) Run `python validate-classifications-by-date.py`. This has no prereqs, and just tries to find the last known date for which classifications exist. Outputs to screen.
 1. First run `python get-seasons.py`. This generates a mapping of which subject is in each season (`subject_season_map.p`).
 2. (optional) You can now run `python validate-subject-season-map.py` which will load the season map pickle file then summarise it.
-3. (optional) You can now run `python check-seasons-present-in-classifications.py`. This simply checks which seasons' images have got classifications present, and outputs the results to the screen.
-4. After having done step 1, you can also run `python check-user-mix.py`. This will scan through the classifications DB, referencing the subject/season mapping, and build up arrays of which users were encountered in each season and how many anonymous users were in each season. This will be written to two new pickle files (`known_users.p` and `anon_users_counts.p`).
+3. (optional) You can now run `python validate-seasons-present-in-classifications.py`. This simply checks which seasons' images have got classifications present, and outputs the results to the screen.
+4. After having done step 1, you can also run `python get-user-mix.py`. This will scan through the classifications DB, referencing the subject/season mapping, and build up arrays of which users were encountered in each season and how many anonymous users were in each season. This will be written to two new pickle files (`known_users.p` and `anon_users_counts.p`).
 5. (optional) You can now run `python validate-known-users.py` which will load the known users file and summarise it.
-6. After having done step 4, you can now run `python summarise.py`. This will load the known users and anon users file and generate a CSV containing the new, returning and anonymous users per season.
+6. After having done step 4, you can now run `python get-summary.py`. This will load the known users and anon users file and generate a CSV containing the new, returning and anonymous users per season.
 
 
 
