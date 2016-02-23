@@ -104,6 +104,10 @@ while next_results.count()>0:
 
 print "\nClassification Season Check Results:\n"
 for season_num,status in season_found.iteritems():
+  if season_num==9:
+    season_num = "Lost Season"
+  elif season_num==10:
+    season_num = 9
   if status:
     print "For Season %s, classifications were found." % season_num
   else:
