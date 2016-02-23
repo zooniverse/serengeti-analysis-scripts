@@ -30,7 +30,6 @@ while next_results.count()>0:
     if completed_page_rows % pageSize == 0:
       print "%s (id = %s)" % (completed_page_rows,classification["_id"])
     last_id = classification["_id"]
-    next_results = classification_collection.find({"_id":{"$gt":last_id}},{"tutorial":1,"user_name":1,"subjects":1},no_cursor_timeout=True).limit(pageSize)
     if "tutorial" in classification.keys():
       continue
     else:
@@ -46,6 +45,8 @@ while next_results.count()>0:
         if season not in anon_users_counts.keys():
           anon_users_counts[season]=0
         anon_users_counts[season] += 1
+  next_results = classification_collection.find({"_id":{"$gt":last_id}},{"tutorial":1,"user_name":1,"subjects":1},no_cursor_timeout=True).limit(pageSize)
+
 
 print "Saving known users and anonymous users..."
 
