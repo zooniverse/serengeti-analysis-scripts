@@ -23,7 +23,6 @@ pageSize = 500000
 first_classification = classification_collection.find_one()
 completed_page_rows=1
 last_id = first_classification["_id"]
-found_alex=False
 last_classification=None
 skipped = 0
 latest_date=first_classification["created_at"]
@@ -43,10 +42,6 @@ while next_results.count()>0:
       season = subject_season_map[subject_id]
       if "user_name" in classification.keys():
         user_name = classification["user_name"]
-        if user_name=="alexbfree":
-          found_alex=subject_id
-          print "found alex:"
-          print classification
         if season not in known_users.keys():
           known_users[season]=[]
         if user_name not in known_users[season]:
@@ -63,8 +58,3 @@ print "Saving known users and anonymous users..."
 
 pickle.dump( known_users, open( "known_users.p", "wb" ) )
 pickle.dump( anon_users_counts, open( "anon_users_counts.p", "wb" ) )
-
-if found_alex != False:
-  print "Oh and we found alex, with subject ID %s" % found_alex
-else:
-  print "Oh and we didn't find alex"
