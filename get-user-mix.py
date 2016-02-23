@@ -19,7 +19,7 @@ known_users = {}
 anon_users_counts = {}
 
 # scan through *ALL* classifications (add a .skip or .limit to look at subset)
-pageSize = 100000
+pageSize = 500000
 first_classification = classification_collection.find_one()
 completed_page_rows=1
 last_id = first_classification["_id"]

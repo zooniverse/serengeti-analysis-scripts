@@ -12,12 +12,12 @@ classification_collection = db["serengeti_classifications"]
 print "Collection contains %s documents." % db.command("collstats", "serengeti_classifications")["count"]
 
 # scan through *ALL* classifications and check which seasons present
-for ii, classification in enumerate(classification_collection.find(no_cursor_timeout=True).skip(10590000)):  # .skip(skip).limit(limit)
+for ii, classification in enumerate(classification_collection.find(no_cursor_timeout=True)):  # .skip(skip).limit(limit)
   # skip tutorial classifications
   if "tutorial" in classification and classification["tutorial"]==True:
     continue
-  if ii % 10000 == 0 or ii > 10593400:
-    print "%s: created at %s" % (ii,classification["_id"],classification["created_at"])
+  if ii % 100000 == 0 or (ii > 10593400 and ii < 10593600):
+    print "%s (id %s): created at %s" % (ii,classification["_id"],classification["created_at"])
 
 print "\nDone.\n"
 
