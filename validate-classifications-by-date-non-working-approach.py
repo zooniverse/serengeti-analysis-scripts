@@ -14,7 +14,7 @@ print "Collection contains %s documents." % db.command("collstats", "serengeti_c
 # scan through *ALL* classifications and check which seasons present
 for ii, classification in enumerate(classification_collection.find(no_cursor_timeout=True).skip(10590000)):  # .skip(skip).limit(limit)
   # skip tutorial classifications
-  if "tutorial" in classification:
+  if "tutorial" in classification and classification["tutorial"]==True:
     continue
   if ii % 10000 == 0 or ii > 10593400:
     print "%s: created at %s" % (ii,classification["_id"],classification["created_at"])

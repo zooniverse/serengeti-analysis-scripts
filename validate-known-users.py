@@ -43,12 +43,28 @@ def get_season_no(oid):
     season="Lost Season"
   return season
 
-if "mrniaboc" in known_users[seasons[1]]:
-  print "Grant is in season 1"
-elif "mrniaboc" in known_users[seasons[6]]:
-  print "Grant is in season 6"
+if seasons[1] in known_users.keys() and "alexbfree" in known_users[seasons[1]]:
+  print "Alex is in season 1"
+elif seasons[2] in known_users.keys() and "alexbfree" in known_users[seasons[2]]:
+  print "Alex is in season 2"
+elif seasons[3] in known_users.keys() and "alexbfree" in known_users[seasons[3]]:
+  print "Alex is in season 3"
+elif seasons[4] in known_users.keys() and "alexbfree" in known_users[seasons[4]]:
+  print "Alex is in season 4"
+elif seasons[5] in known_users.keys() and "alexbfree" in known_users[seasons[5]]:
+  print "Alex is in season 5"
+elif seasons[6] in known_users.keys() and "alexbfree" in known_users[seasons[6]]:
+  print "Alex is in season 6"
+elif seasons[7] in known_users.keys() and "alexbfree" in known_users[seasons[7]]:
+  print "Alex is in season 7"
+elif seasons[8] in known_users.keys() and "alexbfree" in known_users[seasons[8]]:
+  print "Alex is in season 8"
+elif seasons[9] in known_users.keys() and "alexbfree" in known_users[seasons[9]]:
+  print "Alex is in the Lost Season"
+elif seasons[10] in known_users.keys() and "alexbfree" in known_users[seasons[10]]:
+  print "Alex is in season 9"
 else:
-  print "Grant is somewhere else"
+  print "Alex's classifications were not encountered"
 
 for k,v in known_users.iteritems():
   season = get_season_no(k)

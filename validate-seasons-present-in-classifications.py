@@ -92,7 +92,7 @@ while next_results.count()>0:
     last_id = classification["_id"]
 
     # skip tutorial classifications
-    if "tutorial" in classification:
+    if "tutorial" in classification and classification["tutorial"]==True:
       continue
     else:
       subject_id = classification["subjects"][0]["zooniverse_id"]
