@@ -1,0 +1,7 @@
+five blanks => 'blank'
+10+ the same => 'consensus'
+10+ blanks => 'blank_consensus'
+>=25 classifications => 'complete'
+
+
+https://github.com/zooniverse/Ouroboros/blob/0c7bfe729b8844f2e054c9154e1c1accd16fe006/app/projects/serengeti/serengeti_subject.rb
