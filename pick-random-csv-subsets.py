@@ -17,7 +17,7 @@ def create_csv(csv_directory_name, csv_filename):
   if not os.path.exists(csv_directory_name):
     os.makedirs(csv_directory_name)
   wrfile = open("%s/%s" % (csv_directory_name, csv_filename), 'w')
-  writer = csv.writer(wrfile, delimiter=',', quoting=csv.QUOTE_MINIMAL)
+  writer = csv.writer(wrfile, delimiter=',', quoting=csv.QUOTE_NONNUMERIC)
   writer.writerow(["url","Subject ID","Frame","Season","Site","Roll","Decision Type","Crowd Determination"])
   return {"handle": wrfile, "writer": writer}
 
