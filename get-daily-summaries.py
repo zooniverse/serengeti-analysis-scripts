@@ -4,6 +4,11 @@ import pymongo
 from collections import OrderedDict
 from datetime import datetime
 import csv
+import sys
+
+def restart_line():
+  sys.stdout.write('\r')
+  sys.stdout.flush()
 
 def get_day_of_classification(timestamp):
   return datetime(*timestamp.timetuple()[:3])
@@ -32,6 +37,10 @@ next_results = classification_collection.find({"_id":{"$gt":last_id}},{"created_
 while next_results.count()>0:
   for ii, classification in enumerate(next_results):
     completed_page_rows+=1
+    if completed_page_rows % 10000 == 0:
+      restart_line()
+      sys.stdout.write("%s classifications processed..." % completed_page_rows)
+      sys.stdout.flush()
     last_id = classification["_id"]
     latest_date = classification["created_at"]
     date_of_this_classification = get_day_of_classification(latest_date)
@@ -55,8 +64,12 @@ while next_results.count()>0:
       else:
         # start of a new day
         current_day = date_of_this_classification
-        print "Processing classifications for %s..." % current_day.strftime('%d-%b-%Y')
+        print "\nProcessing classifications for %s...\n" % current_day.strftime('%d-%b-%Y')
   next_results = classification_collection.find({"_id":{"$gt":last_id}},{"created_at":1,"tutorial":1,"user_name":1,"subjects":1},no_cursor_timeout=True).limit(pageSize)
+
+restart_line()
+sys.stdout.write("%s classifications processed..." % completed_page_rows)
+sys.stdout.flush()
 
 print "Processed a total of %s classifications (skipped %s). The latest date examined was %s" % (completed_page_rows,skipped,current_day.strftime('%d-%b-%Y'))
 print "Exporting daily user summaries to CSV..."
