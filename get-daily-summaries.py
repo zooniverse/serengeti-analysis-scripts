@@ -77,6 +77,7 @@ restart_line()
 sys.stdout.write("%s classifications processed..." % completed_page_rows)
 sys.stdout.flush()
 
+print "\n\nLogged %s daily users for %s (and %s anonymous too)." % (len(daily_users[current_day]),current_day.strftime('%d-%b-%Y'),anon_daily_users_counts[current_day])
 print "\n\nProcessed a total of %s classifications (skipped %s). The latest date examined was %s" % (completed_page_rows,skipped,current_day.strftime('%d-%b-%Y'))
 print "\nExporting daily user summaries to CSV..."
 
