@@ -88,14 +88,18 @@ writer = csv.writer(wrfile, delimiter=',', quoting=csv.QUOTE_NONNUMERIC)
 writer.writerow(["date","User ID","Classifications"])
 for day,user_counts in daily_users.iteritems():
   for user,count in user_counts.iteritems():
-    writer.writerow([day.strftime('%Y-%m-%d'),user,count])
+    row = [day.strftime('%Y-%m-%d'),user,count]
+    row=[s.encode('utf-8') for s in row]
+    writer.writerow(row)    
 wrfile.close()
 
 wrfile = open("csvs/output/daily-anon.csv", 'w')
 writer = csv.writer(wrfile, delimiter=',', quoting=csv.QUOTE_NONNUMERIC)
 writer.writerow(["date","Anonymous Classifications"])
 for day,anon_count in anon_daily_users_counts.iteritems():
-    writer.writerow([day.strftime('%Y-%m-%d'),anon_count])
+  row = [day.strftime('%Y-%m-%d'),anon_count]
+  row=[s.encode('utf-8') for s in row]
+  writer.writerow(row)
 wrfile.close()
 
 print "\nDone.\n"
