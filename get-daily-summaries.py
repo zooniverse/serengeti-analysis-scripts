@@ -95,4 +95,4 @@ for day,anon_count in anon_daily_users_counts.iteritems():
     writer.writerow([day.strftime('%Y-%m-%d'),anon_count])
 wrfile.close()
 
-print "\nDone."
+print "\nDone.\n"
