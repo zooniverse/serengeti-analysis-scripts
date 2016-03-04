@@ -18,7 +18,7 @@ def create_csv(csv_directory_name, csv_filename):
     os.makedirs(csv_directory_name)
   wrfile = open("%s/%s" % (csv_directory_name, csv_filename), 'w')
   writer = csv.writer(wrfile, delimiter=',', quoting=csv.QUOTE_NONNUMERIC)
-  writer.writerow(["url","Subject ID","Frame","Season","Site","Roll","Decision Type","Crowd Determination"])
+  writer.writerow(["url","Subject ID","Frame","Season","Site","Roll","Decision Type","Crowd Determination","Total Species Present","Total Animals Present"])
   return {"handle": wrfile, "writer": writer}
 
 species_list = ["elephant","ostrich","buffalo","warthog","wildebeest","blank"]

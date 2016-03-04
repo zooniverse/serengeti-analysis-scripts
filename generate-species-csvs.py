@@ -15,7 +15,7 @@ def create_csv(csv_directory_name, csv_filename):
     os.makedirs(csv_directory_name)
   wrfile = open("%s/%s" % (csv_directory_name, csv_filename), 'w')
   writer = csv.writer(wrfile, delimiter=',', quoting=csv.QUOTE_NONNUMERIC)
-  writer.writerow(["url","Subject ID","Frame","Season","Site","Roll","Decision Type","Crowd Determination"])
+  writer.writerow(["url","Subject ID","Frame","Season","Site","Roll","Decision Type","Crowd Determination","Number of Species Present","Number of Animals Present"])
   return {"handle": wrfile, "writer": writer}
 
 def retire_reason_explain(retire_reason):
@@ -56,7 +56,7 @@ def add_images_to_csv_for(subject, csvwriter):
       counts[species]=0
     csvwriter = csvwriters[species]["writer"]
     for this_url in subject["frame_urls"]:
-      csvwriter.writerow([this_url,subject["subject_id"],(frame_no+1),subject["season"],subject["site_id"],subject["roll_code"],retire_reason_explain(subject["retire_reason"]),nicefy_species(subject["crowd_says"])])
+      csvwriter.writerow([this_url,subject["subject_id"],(frame_no+1),subject["season"],subject["site_id"],subject["roll_code"],retire_reason_explain(subject["retire_reason"]),nicefy_species(subject["crowd_says"]),subject["total_species"],subject["total_animals"]])
       frame_no += 1
 
 def get_season_no_from_char(c):
@@ -70,8 +70,8 @@ def get_season_no_from_char(c):
     return int(c)
 
 if len(sys.argv) < 2:
-  print "Usage: python generate-species-csvs.py <all|season-numbers-without-spaces> \n"
-  print "(Note that Lost Season is represented by '9', season 9 by '0', season 10 by 'A')"
+  print "Usage: python generate-species-csvs.py <all|season-numbers-without-spaces>"
+  print "(Note that Lost Season is represented by '9', season 9 by '0', season 10 by 'A')\n"
   os._exit(-1)
 else:
   if not os.path.exists("csvs/input/consensus-detailed.csv"):
@@ -121,6 +121,14 @@ with open('csvs/input/consensus-detailed.csv', 'rb') as csvfile:
     else:
       subject["frame_urls"]=[row[5]]
     subject["crowd_says"] = row[10]
+    if row[11]:
+      subject["total_species"] = row[11]
+    else:
+      subject["total_species"] = 0
+    if row[12]:
+      subject["total_animals"] = row[12]
+    else:
+      subject["total_animals"] = 0
     if row[14]:
       subject["retire_reason"] = row[14]
     else:
