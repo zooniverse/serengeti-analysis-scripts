@@ -8,12 +8,16 @@ import sys
 import os
 import time
 
-if len(sys.argv) < 3:
-  print "Usage: python generate-daily-summaries.py <start-date-as-yyyy-mm-dd> <end-date-as-yyyy-mm-dd>\n"
+if len(sys.argv) < 3 or (len(sys.argv) == 2 and sys.argv[1]!="ALL"):
+  print "Usage: python generate-daily-summaries.py ALL \n or: python generate-daily-summaries.py <start-date-as-yyyy-mm-dd> <end-date-as-yyyy-mm-dd>\n"
   os._exit(-1)
 
-start_date = datetime.strptime(sys.argv[1], '%Y-%m-%d')
-end_date = datetime.strptime(sys.argv[2], '%Y-%m-%d') + timedelta(days=1)
+if sys.argv[1]=="ALL":
+  find_filter = {}
+else:
+  start_date = datetime.strptime(sys.argv[1], '%Y-%m-%d')
+  end_date = datetime.strptime(sys.argv[2], '%Y-%m-%d') + timedelta(days=1)
+  find_filter = {"created_at":{"$gte":start_date,"$lt":end_date}}
 
 def restart_line():
   sys.stdout.write('\r')
@@ -39,7 +43,7 @@ skipped = 0
 
 current_day = None
 
-for ii, classification in enumerate(classification_collection.find({"created_at":{"$gte":start_date,"$lt":end_date}},{"created_at":1,"tutorial":1,"user_name":1,"subjects":1},no_cursor_timeout=True).sort('created_at', pymongo.ASCENDING)):
+for ii, classification in enumerate(classification_collection.find(find_filter,{"created_at":1,"tutorial":1,"user_name":1,"subjects":1},no_cursor_timeout=True).sort('created_at', pymongo.ASCENDING)):
   completed_page_rows+=1
   if completed_page_rows % 10000 == 0:
     restart_line()
