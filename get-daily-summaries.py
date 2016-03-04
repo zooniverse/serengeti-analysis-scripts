@@ -8,7 +8,7 @@ import sys
 import os
 import time
 
-if len(sys.argv) < 3 or (len(sys.argv) == 2 and sys.argv[1]!="ALL"):
+if (len(sys.argv) == 2 and sys.argv[1]!="ALL") or (len(sys.argv) < 3 and sys.argv[1]!="ALL"):
   print "Usage: python generate-daily-summaries.py ALL \n   or: python generate-daily-summaries.py <start-date-as-yyyy-mm-dd> <end-date-as-yyyy-mm-dd>\n"
   os._exit(-1)
 
@@ -55,7 +55,7 @@ for ii, classification in enumerate(classification_collection.find(find_filter,{
     continue
   else:
     if date_of_this_classification != current_day:
-      if current_day in daily_users.keys():
+      if current_day in daily_users.keys() and current_day in anon_daily_users_counts.keys():
         print "\n\nLogged %s daily users for %s (and %s anonymous too)." % (len(daily_users[current_day]),current_day.strftime('%d-%b-%Y'),anon_daily_users_counts[current_day])
       # start of a new day
       current_day = date_of_this_classification
@@ -77,7 +77,9 @@ restart_line()
 sys.stdout.write("%s classifications processed..." % completed_page_rows)
 sys.stdout.flush()
 
-print "\n\nLogged %s daily users for %s (and %s anonymous too)." % (len(daily_users[current_day]),current_day.strftime('%d-%b-%Y'),anon_daily_users_counts[current_day])
+if current_day in daily_users.keys() and current_day in anon_daily_users_counts.keys():
+  print "\n\nLogged %s daily users for %s (and %s anonymous too)." % (len(daily_users[current_day]),current_day.strftime('%d-%b-%Y'),anon_daily_users_counts[current_day])
+
 print "\n\nProcessed a total of %s classifications (skipped %s). The latest date examined was %s" % (completed_page_rows,skipped,current_day.strftime('%d-%b-%Y'))
 print "\nExporting daily user summaries to CSV..."
 
