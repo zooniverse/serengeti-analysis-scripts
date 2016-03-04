@@ -78,7 +78,7 @@ sys.stdout.write("%s classifications processed..." % completed_page_rows)
 sys.stdout.flush()
 
 print "\n\nProcessed a total of %s classifications (skipped %s). The latest date examined was %s" % (completed_page_rows,skipped,current_day.strftime('%d-%b-%Y'))
-print "Exporting daily user summaries to CSV..."
+print "\nExporting daily user summaries to CSV..."
 
 wrfile = open("csvs/output/daily-users.csv", 'w')
 writer = csv.writer(wrfile, delimiter=',', quoting=csv.QUOTE_NONNUMERIC)
