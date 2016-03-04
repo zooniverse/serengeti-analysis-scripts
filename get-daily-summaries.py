@@ -74,7 +74,7 @@ sys.stdout.flush()
 print "Processed a total of %s classifications (skipped %s). The latest date examined was %s" % (completed_page_rows,skipped,current_day.strftime('%d-%b-%Y'))
 print "Exporting daily user summaries to CSV..."
 
-wrfile = open("daily-users.csv", 'w')
+wrfile = open("csvs/output/daily-users.csv", 'w')
 writer = csv.writer(wrfile, delimiter=',', quoting=csv.QUOTE_NONNUMERIC)
 writer.writerow(["date","User ID","Classifications"])
 for day,user_counts in daily_users.iteritems():
@@ -82,7 +82,7 @@ for day,user_counts in daily_users.iteritems():
     writer.writerow([day.strftime('%Y-%m-%d'),user,count])
 wrfile.close()
 
-wrfile = open("daily-anon.csv", 'w')
+wrfile = open("csvs/output/daily-anon.csv", 'w')
 writer = csv.writer(wrfile, delimiter=',', quoting=csv.QUOTE_NONNUMERIC)
 writer.writerow(["date","Anonymous Classifications"])
 for day,anon_count in anon_daily_users_counts.iteritems():
