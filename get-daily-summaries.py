@@ -9,7 +9,7 @@ import os
 import time
 
 if len(sys.argv) < 3 or (len(sys.argv) == 2 and sys.argv[1]!="ALL"):
-  print "Usage: python generate-daily-summaries.py ALL \n or: python generate-daily-summaries.py <start-date-as-yyyy-mm-dd> <end-date-as-yyyy-mm-dd>\n"
+  print "Usage: python generate-daily-summaries.py ALL \n   or: python generate-daily-summaries.py <start-date-as-yyyy-mm-dd> <end-date-as-yyyy-mm-dd>\n"
   os._exit(-1)
 
 if sys.argv[1]=="ALL":
