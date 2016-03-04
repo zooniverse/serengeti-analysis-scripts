@@ -64,7 +64,7 @@ while next_results.count()>0:
       else:
         # start of a new day
         current_day = date_of_this_classification
-        print "\nProcessing classifications for %s...\n" % current_day.strftime('%d-%b-%Y')
+        print "\n\nProcessing classifications for %s...\n" % current_day.strftime('%d-%b-%Y')
   next_results = classification_collection.find({"_id":{"$gt":last_id}},{"created_at":1,"tutorial":1,"user_name":1,"subjects":1},no_cursor_timeout=True).limit(pageSize)
 
 restart_line()
