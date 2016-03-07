@@ -92,7 +92,12 @@ for day,user_counts in daily_users.iteritems():
     outrow = []
     for el in row:
       if isinstance(el,str):
-        outrow.append(el.encode('utf-8'))
+        try:
+          outrow.append(unicode(el.decode('utf-8')))
+        except UnicodeEncodeError as e:
+          print "UnicodeEncodeError({0}): {1}".format(e.errno, e.strerror)
+          print "skipping row:"
+          print outrow
       else:
         outrow.append(el)
     writer.writerow(outrow)
@@ -106,7 +111,12 @@ for day,anon_count in anon_daily_users_counts.iteritems():
   outrow = []
   for el in row:
     if isinstance(el,str):
-      outrow.append(el.encode('utf-8'))
+      try:
+        outrow.append(unicode(el.decode('utf-8')))
+      except UnicodeEncodeError as e:
+        print "UnicodeEncodeError({0}): {1}".format(e.errno, e.strerror)
+        print "skipping row:"
+        print outrow
     else:
       outrow.append(el)
   writer.writerow(outrow)
