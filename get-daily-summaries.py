@@ -95,13 +95,7 @@ for day,user_counts in daily_users.iteritems():
         outrow.append(unicode(el.decode('utf-8')))
       else:
         outrow.append(el)
-    try:
-      writer.writerow(outrow)
-    except UnicodeEncodeError as e:
-      print "UnicodeEncodeError: Encoding {0}, reason '{1}', start {2}, end {3}, object:".format(e.encoding, e.reason, e.start, e.end)
-      print e.object
-      print "skipping row:"
-      print outrow
+    writer.writerow(outrow)
 wrfile.close()
 
 wrfile = open("csvs/output/daily-summary/daily-anon.csv", 'w')
@@ -115,13 +109,7 @@ for day,anon_count in anon_daily_users_counts.iteritems():
       outrow.append(unicode(el.decode('utf-8')))
     else:
       outrow.append(el)
-    try:
-      writer.writerow(outrow)
-    except UnicodeEncodeError as e:
-      print "UnicodeEncodeError: Encoding {0}, reason '{1}', start {2}, end {3}, object:".format(e.encoding, e.reason, e.start, e.end)
-      print e.object
-      print "skipping row:"
-      print outrow
+  writer.writerow(outrow)
 wrfile.close()
 
 print "\nDone.\n"
