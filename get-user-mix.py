@@ -33,7 +33,7 @@ def get_season_str(oid):
 
 # load pickle file
 print "Loading season mapping pickle file...\n"
-subject_season_map = pickle.load( open( "subject_season_map.p", "rb" ) )
+subject_season_map = pickle.load( open( "pickle/subject_season_map.p", "rb" ) )
 
 print "Scanning classifications db..."
 # connect to the mongo server
@@ -89,5 +89,5 @@ print "Processed a total of %s documents (skipped %s). The latest date examined 
 
 print "Saving known users and anonymous users..."
 
-pickle.dump( known_users, open( "known_users.p", "wb" ) )
-pickle.dump( anon_users_counts, open( "anon_users_counts.p", "wb" ) )
+pickle.dump( known_users, open( "pickle/known_users.p", "wb" ) )
+pickle.dump( anon_users_counts, open( "pickle/anon_users_counts.p", "wb" ) )

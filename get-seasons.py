@@ -24,4 +24,4 @@ for ii, subject in enumerate(subject_collection.find(no_cursor_timeout=True)):  
   else:
     print "no season for subject "+subject["zooniverse_id"]
 
-pickle.dump(subject_season_map, open( "subject_season_map.p", "wb" ) )
+pickle.dump(subject_season_map, open( "pickle/subject_season_map.p", "wb" ) )

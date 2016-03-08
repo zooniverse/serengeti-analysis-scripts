@@ -8,15 +8,15 @@ from collections import OrderedDict
 import sys
 
 def create_csv(csv_filename):
-  wrfile = open("summaries.csv", 'w')
+  wrfile = open("csvs/output/season-summary/summaries.csv", 'w')
   writer = csv.writer(wrfile, delimiter=',', quoting=csv.QUOTE_MINIMAL)
   writer.writerow(["season","group_id","new","returning","anon"])
   return {"handle": wrfile, "writer": writer}
 
 # load pickle file
 print "Loading pickle files...\n"
-known_users = pickle.load( open( "known_users.p", "rb" ) )
-anon_users_counts = pickle.load (open( "anon_users_counts.p", "rb") )
+known_users = pickle.load( open( "pickle/known_users.p", "rb" ) )
+anon_users_counts = pickle.load (open( "pickle/anon_users_counts.p", "rb") )
 
 def get_season_str(season):
   if season==9:

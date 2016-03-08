@@ -36,13 +36,13 @@ else:
   print "\nLoading CSVs and picking sets per species. Current sets are %s:\n" % species_list
   for species in species_list:
     if not os.path.exists("csvs/input/consensus-detailed.csv"):
-      print "Missing input file \"csvs/output/consensus-detailed.csv\".\nSkipping species."
+      print "Missing input file \"csvs/input/consensus-detailed.csv\".\nSkipping species."
       os._exit(-1)
 
     rows_available = int(file_len('csvs/output/%s.csv' % species))
 
     picked_row_indices = numpy.random.choice(rows_available,replace=False,size=rows_needed)
-    with open('csvs/output/%s.csv' % species, 'rb') as csvfile:
+    with open('csvs/output/species-full/%s.csv' % species, 'rb') as csvfile:
       rows_written = 0
       reader = csv.reader(csvfile, delimiter=',')
       next(reader)
