@@ -52,7 +52,7 @@ def add_images_to_csv_for(subject, csvwriter):
     frame_no = 0
     species = subject["crowd_says"]
     if species not in csvwriters.keys():
-      csvwriters[species] = create_csv("csvs/output", "%s.csv" % species)
+      csvwriters[species] = create_csv("csvs/output/species-full", "%s.csv" % species)
       counts[species]=0
     csvwriter = csvwriters[species]["writer"]
     for this_url in subject["frame_urls"]:

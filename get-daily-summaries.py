@@ -3,7 +3,7 @@ __author__ = 'alex'
 import pymongo
 from collections import OrderedDict
 from datetime import datetime,timedelta
-import csv
+import unicodecsv as csv
 import sys
 import os
 import time
@@ -83,8 +83,8 @@ if current_day in daily_users.keys() and current_day in anon_daily_users_counts.
 print "\n\nProcessed a total of %s classifications (skipped %s). The latest date examined was %s" % (completed_page_rows,skipped,current_day.strftime('%d-%b-%Y'))
 print "\nExporting daily user summaries to CSV..."
 
-wrfile = open("csvs/output/daily-users.csv", 'w')
-writer = csv.writer(wrfile, delimiter=',', quoting=csv.QUOTE_NONNUMERIC)
+wrfile = open("csvs/output/daily-summary/daily-users.csv", 'w')
+writer = csv.writer(wrfile, delimiter=',', quoting=csv.QUOTE_NONNUMERIC,dialect='excel', encoding='utf-8')
 writer.writerow(["date","User ID","Classifications"])
 for day,user_counts in daily_users.iteritems():
   for user,count in user_counts.iteritems():
@@ -98,13 +98,14 @@ for day,user_counts in daily_users.iteritems():
     try:
       writer.writerow(outrow)
     except UnicodeEncodeError as e:
-      print "UnicodeEncodeError({0}): {1}".format(e.errno, e.strerror)
+      print "UnicodeEncodeError: Encoding {0}, reason '{1}', start {2}, end {3}, object:".format(e.encoding, e.reason, e.start, e.end)
+      print e.object
       print "skipping row:"
       print outrow
 wrfile.close()
 
-wrfile = open("csvs/output/daily-anon.csv", 'w')
-writer = csv.writer(wrfile, delimiter=',', quoting=csv.QUOTE_NONNUMERIC)
+wrfile = open("csvs/output/daily-summary/daily-anon.csv", 'w')
+writer = csv.writer(wrfile, delimiter=',', quoting=csv.QUOTE_NONNUMERIC,dialect='excel', encoding='utf-8')
 writer.writerow(["date","Anonymous Classifications"])
 for day,anon_count in anon_daily_users_counts.iteritems():
   row = [day.strftime('%Y-%m-%d'),anon_count]
@@ -117,7 +118,8 @@ for day,anon_count in anon_daily_users_counts.iteritems():
     try:
       writer.writerow(outrow)
     except UnicodeEncodeError as e:
-      print "UnicodeEncodeError({0}): {1}".format(e.errno, e.strerror)
+      print "UnicodeEncodeError: Encoding {0}, reason '{1}', start {2}, end {3}, object:".format(e.encoding, e.reason, e.start, e.end)
+      print e.object
       print "skipping row:"
       print outrow
 wrfile.close()
