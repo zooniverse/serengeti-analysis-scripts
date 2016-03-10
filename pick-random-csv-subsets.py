@@ -23,16 +23,16 @@ def create_csv(csv_directory_name, csv_filename):
 
 species_list = ["elephant","ostrich","buffalo","warthog","wildebeest","blank"]
 
-rows_needed = int(sys.argv[1])
-
-csvwriters = {}
-for species in species_list:
-  csvwriters[species] = create_csv("csvs/output/sets", "%s-%s.csv" % (species,rows_needed))
-
 if len(sys.argv) < 2:
   print "Usage: python pick-random-csv-subsets.py <rows-needed>"
   os._exit(-1)
 else:
+  rows_needed = int(sys.argv[1])
+
+  csvwriters = {}
+  for species in species_list:
+    csvwriters[species] = create_csv("csvs/output/sets", "%s-%s.csv" % (species,rows_needed))
+
   print "\nLoading CSVs and picking sets per species. Current sets are %s:\n" % species_list
   for species in species_list:
     if not os.path.exists("csvs/input/consensus-detailed.csv"):
