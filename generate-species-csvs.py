@@ -61,7 +61,7 @@ def nicefy_species(species):
   else:
     return species
 
-def add_images_to_csv_for(subject, csvwriter):
+def add_images_to_csv_for(subject, csvwriters):
   if subject["retire_reason"]!="unretired":
     frame_no = 0
     species = subject["crowd_says"]
