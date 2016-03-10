@@ -21,7 +21,7 @@ def create_csv(csv_directory_name, csv_filename):
   writer.writerow(["url","Subject ID","Frame","Season","Site","Roll","Decision Type","Crowd Determination","Total Species Present","Total Animals Present"])
   return {"handle": wrfile, "writer": writer}
 
-species_list = ["elephant","ostrich","buffalo","warthog","wildebeest","blank"]
+species_list = ["elephant","ostrich","buffalo","warthog","wildebeest","blank","gazellethomsons","gazellegrants","zebra","hartebeest","guineafowl","giraffe"]
 
 if len(sys.argv) < 2:
   print "Usage: python pick-random-csv-subsets.py <rows-needed>"

@@ -37,6 +37,8 @@ def nicefy_species(species):
     return "Elephants"
   elif species=="buffalo":
     return "Buffalo"
+  elif species=="giraffe":
+    return "Giraffes"
   elif species=="ostrich":
     return "Ostriches"
   elif species=="warthog":
