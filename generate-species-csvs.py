@@ -44,9 +44,9 @@ def nicefy_species(species):
   elif species=="warthog":
     return "Warthogs"
   elif species=="gazellethomsons":
-    return "Thomson's Gazelles"
+    return "Gazelles (Thomson's)"
   elif species=="gazellegrants":
-    return "Grant's Gazelles"
+    return "Gazelles (Grant's)"
   elif species=="guineafowl":
     return "Guinea Fowls"
   elif species=="zebra":
