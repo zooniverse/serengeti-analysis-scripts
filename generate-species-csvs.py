@@ -6,6 +6,8 @@ import sys
 csvwriters = {}
 counts = {}
 
+MAX_ANIMALS_PER_IMAGE=5
+
 def restart_line():
   sys.stdout.write('\r')
   sys.stdout.flush()
@@ -39,6 +41,16 @@ def nicefy_species(species):
     return "Ostriches"
   elif species=="warthog":
     return "Warthogs"
+  elif species=="gazellethomsons":
+    return "Thomson's Gazelles"
+  elif species=="gazellegrants":
+    return "Grant's Gazelles"
+  elif species=="guineafowl":
+    return "Guinea Fowls"
+  elif species=="zebra":
+    return "Zebras"
+  elif species=="hartebeest":
+    return "Hartebeest"
   elif species=="multi":
     return "Multiple species present"
   elif species=="wildebeest":
@@ -144,7 +156,8 @@ for subject_id,subject in subjects_index.iteritems():
     restart_line()
     sys.stdout.write("%s subjects written to CSV..." % i)
     sys.stdout.flush()
-  add_images_to_csv_for(subject, csvwriters)
+  if subject["total_animals"] <= MAX_ANIMALS_PER_IMAGE:
+    add_images_to_csv_for(subject, csvwriters)
 
 print "\n\nClosing CSV handles...\n"
 
