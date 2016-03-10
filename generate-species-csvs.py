@@ -136,11 +136,11 @@ with open('csvs/input/consensus-detailed.csv', 'rb') as csvfile:
       subject["frame_urls"]=[row[5]]
     subject["crowd_says"] = row[10]
     if row[11]:
-      subject["total_species"] = row[11]
+      subject["total_species"] = int(row[11])
     else:
       subject["total_species"] = 0
     if row[12]:
-      subject["total_animals"] = row[12]
+      subject["total_animals"] = int(row[12])
     else:
       subject["total_animals"] = 0
     if row[14]:
@@ -154,14 +154,22 @@ print "\n\nProcessing subjects and writing CSVs:"
 i = 0
 for subject_id,subject in subjects_index.iteritems():
   i += 1
+  skipped = 0
   if i % 5000 == 0:
     restart_line()
     sys.stdout.write("%s subjects written to CSV..." % i)
     sys.stdout.flush()
-  if subject["total_animals"] <= MAX_ANIMALS_PER_IMAGE:
+  if int(subject["total_animals"]) <= MAX_ANIMALS_PER_IMAGE:
     add_images_to_csv_for(subject, csvwriters)
+  else:
+    skipped += 1
 
-print "\n\nClosing CSV handles...\n"
+print "\n"
+
+if skipped > 0:
+  print "Skipped %s subjects which had more than %s animals.\n" % (skipped,MAX_ANIMALS_PER_IMAGE)
+
+print "Closing CSV handles...\n"
 
 for species,csvwriter in csvwriters.iteritems():
   csvwriter["handle"].close()
