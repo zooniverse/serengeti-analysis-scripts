@@ -39,7 +39,7 @@ else:
       print "Missing input file \"csvs/input/consensus-detailed.csv\".\nSkipping species."
       os._exit(-1)
 
-    rows_available = int(file_len('csvs/output/%s.csv' % species))
+    rows_available = int(file_len('csvs/output/species-full/%s.csv' % species))
 
     picked_row_indices = numpy.random.choice(rows_available,replace=False,size=rows_needed)
     with open('csvs/output/species-full/%s.csv' % species, 'rb') as csvfile:
