@@ -4,7 +4,8 @@ import os
 import sys
 
 csvwriters = {}
-counts = {}
+
+beta_data = {}
 
 MAX_ANIMALS_PER_IMAGE=5
 
@@ -17,8 +18,20 @@ def create_csv(csv_directory_name, csv_filename):
     os.makedirs(csv_directory_name)
   wrfile = open("%s/%s" % (csv_directory_name, csv_filename), 'w')
   writer = csv.writer(wrfile, delimiter=',', quoting=csv.QUOTE_NONNUMERIC)
-  writer.writerow(["url","Subject ID","Frame","Season","Site","Roll","Decision Type","Crowd Determination","Number of Species Present","Number of Animals Present"])
+  writer.writerow(["url","Subject ID","Frame","Season","Site","Roll","Decision Type","Crowd Determination","Number of Species Present","Number of Animals Present","View Discussions"])
   return {"handle": wrfile, "writer": writer}
+
+def load_beta_data():
+  with open('csvs/input/beta-data.csv', 'rb') as csvfile:
+    reader = csv.reader(csvfile, delimiter=',', quotechar='"')
+    next(reader) # skip header line
+    for row in reader:
+      species = row[0].strip()
+      subject_id = row[2].strip()
+      beta_data[subject_id]=species
+
+def get_talk_url(subject_id):
+  return "https://talk.snapshotserengeti.org/#/subjects/%s" % subject_id
 
 def retire_reason_explain(retire_reason):
   if retire_reason=="complete":
@@ -62,16 +75,25 @@ def nicefy_species(species):
     return species
 
 def add_images_to_csv_for(subject, csvwriters):
-  if subject["retire_reason"]!="unretired":
-    frame_no = 0
-    species = subject["crowd_says"]
-    if species not in csvwriters.keys():
-      csvwriters[species] = create_csv("csvs/output/species-full", "%s.csv" % species)
-      counts[species]=0
-    csvwriter = csvwriters[species]["writer"]
-    for this_url in subject["frame_urls"]:
-      csvwriter.writerow([this_url,subject["subject_id"],(frame_no+1),subject["season"],subject["site_id"],subject["roll_code"],retire_reason_explain(subject["retire_reason"]),nicefy_species(subject["crowd_says"]),subject["total_species"],subject["total_animals"]])
-      frame_no += 1
+  if beta_only:
+    subject_id_available = subject["subject_id"]
+    if subject_id_available in beta_data.keys():
+      species = subject["crowd_says"]
+      if species not in csvwriters.keys():
+        csvwriters[species] = create_csv("csvs/output/species-beta", "%s.csv" % species)
+      csvwriter = csvwriters[species]["writer"]
+      frame0_url = subject["frame_urls"][0]
+      csvwriter.writerow([frame0_url,subject["subject_id"],1,subject["season"],subject["site_id"],subject["roll_code"],retire_reason_explain(subject["retire_reason"]),nicefy_species(subject["crowd_says"]),subject["total_species"],subject["total_animals"],get_talk_url(subject["subject_id"])])
+  else:
+    if subject["retire_reason"]!="unretired":
+      frame_no = 0
+      species = subject["crowd_says"]
+      if species not in csvwriters.keys():
+        csvwriters[species] = create_csv("csvs/output/species-full", "%s.csv" % species)
+      csvwriter = csvwriters[species]["writer"]
+      for this_url in subject["frame_urls"]:
+        csvwriter.writerow([this_url,subject["subject_id"],(frame_no+1),subject["season"],subject["site_id"],subject["roll_code"],retire_reason_explain(subject["retire_reason"]),nicefy_species(subject["crowd_says"]),subject["total_species"],subject["total_animals"],get_talk_url(subject["subject_id"])])
+        frame_no += 1
 
 def get_season_no_from_char(c):
   if c=='0':
@@ -83,11 +105,16 @@ def get_season_no_from_char(c):
   else:
     return int(c)
 
-if len(sys.argv) < 2:
-  print "Usage: python generate-species-csvs.py <all|season-numbers-without-spaces>"
+if len(sys.argv) < 3:
+  print "Usage: python generate-species-csvs.py <all|season-numbers-without-spaces> <beta|full>"
   print "(Note that Lost Season is represented by '9', season 9 by '0', season 10 by 'A')\n"
   os._exit(-1)
 else:
+  if sys.argv[2]=="beta":
+    load_beta_data()
+    beta_only = True
+  else:
+    beta_only = False
   if not os.path.exists("csvs/input/consensus-detailed.csv"):
     print "\nMissing input file \"csvs/input/consensus-detailed.csv\".\nPlease run \"load 'generate_detailed_consensus.rb'\" from an Ouroboros Rails console\n(started with \"RAILS_ENV=staging bundle exec rails c\").\n"
     os._exit(-1)
@@ -157,7 +184,7 @@ for subject_id,subject in subjects_index.iteritems():
   skipped = 0
   if i % 5000 == 0:
     restart_line()
-    sys.stdout.write("%s subjects written to CSV..." % i)
+    sys.stdout.write("%s subjects processed..." % i)
     sys.stdout.flush()
   if int(subject["total_animals"]) <= MAX_ANIMALS_PER_IMAGE:
     add_images_to_csv_for(subject, csvwriters)
