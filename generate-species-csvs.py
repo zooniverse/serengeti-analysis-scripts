@@ -1,5 +1,4 @@
 import csv
-from bson.objectid import ObjectId
 import os
 import sys
 
@@ -7,6 +6,7 @@ csvwriters = {}
 
 beta_data = {}
 
+MIN_ANIMALS_PER_IMAGE=1
 MAX_ANIMALS_PER_IMAGE=5
 
 def restart_line():
@@ -186,7 +186,8 @@ for subject_id,subject in subjects_index.iteritems():
     restart_line()
     sys.stdout.write("%s subjects processed..." % i)
     sys.stdout.flush()
-  if int(subject["total_animals"]) <= MAX_ANIMALS_PER_IMAGE:
+  total_animals = int(subject["total_animals"])
+  if total_animals >= MIN_ANIMALS_PER_IMAGE and total_animals <= MAX_ANIMALS_PER_IMAGE:
     add_images_to_csv_for(subject, csvwriters)
   else:
     skipped += 1
@@ -194,7 +195,7 @@ for subject_id,subject in subjects_index.iteritems():
 print "\n"
 
 if skipped > 0:
-  print "Skipped %s subjects which had more than %s animals.\n" % (skipped,MAX_ANIMALS_PER_IMAGE)
+  print "Skipped %s subjects which did not have between %s and %s animals.\n" % (skipped,MIN_ANIMALS_PER_IMAGE,MAX_ANIMALS_PER_IMAGE)
 
 print "Closing CSV handles...\n"
 
