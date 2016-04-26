@@ -82,7 +82,7 @@ def add_this_to_todays_latest_session(username, timestamp_of_new_classification)
   daily_users[current_day][username][current_session_number]["last_classification_time"] = classification["created_at"]
   daily_users[current_day][username][current_session_number]["classification_count"] += 1
 
-def add_this_to_a_new_session_today(username, timestamp_of_new_classification):
+def add_this_to_a_new_session_today(username, timestamp_of_new_classification, user_ip):
   current_day = get_day_of_classification(timestamp_of_new_classification)
   if len(daily_users[current_day][username])==0:
     current_session_number = 0
@@ -92,8 +92,9 @@ def add_this_to_a_new_session_today(username, timestamp_of_new_classification):
   daily_users[current_day][username][new_session_number] = OrderedDict()
   daily_users[current_day][username][new_session_number]["first_classification"] = classification["created_at"]
   daily_users[current_day][username][new_session_number]["classification_count"] = 1
+  daily_users[current_day][username][new_session_number]["user_ip"] = user_ip
 
-def store_this_classification(username, current_day, timestamp_of_new_classification):
+def store_this_classification(username, current_day, timestamp_of_new_classification, user_ip):
   is_new_session = False
   if current_day not in last_classification_created_at.keys() or username not in last_classification_created_at[current_day].keys():
     # first time encountering this user on this day - need to check if user was working right up to midnight yesterday
@@ -110,7 +111,7 @@ def store_this_classification(username, current_day, timestamp_of_new_classifica
       # extension of previous session - update the session data with a new classification
       add_this_to_todays_latest_session(username, timestamp_of_new_classification)
   if is_new_session:
-    add_this_to_a_new_session_today(username, timestamp_of_new_classification)
+    add_this_to_a_new_session_today(username, timestamp_of_new_classification, user_ip)
   return is_new_session
 
 print "\nScanning classifications db and generating daily summaries..."
@@ -131,7 +132,7 @@ skipped = 0
 current_day = None
 last_classification_created_at = OrderedDict()
 
-for ii, classification in enumerate(classification_collection.find(find_filter,{"created_at":1,"tutorial":1,"user_name":1,"subjects":1},no_cursor_timeout=True).sort('created_at', pymongo.ASCENDING)):
+for ii, classification in enumerate(classification_collection.find(find_filter,{"created_at":1,"tutorial":1,"user_name":1,"user_ip":1,"subjects":1},no_cursor_timeout=True).sort('created_at', pymongo.ASCENDING)):
   completed_page_rows+=1
   if completed_page_rows % 10000 == 0:
     restart_line()
@@ -152,7 +153,7 @@ for ii, classification in enumerate(classification_collection.find(find_filter,{
     if "user_name" in classification.keys():
       username = classification["user_name"]
       initialise_daily_user_records(current_day,username)
-      store_this_classification(username, current_day, classification["created_at"])
+      store_this_classification(username, current_day, classification["created_at"], classification["user_ip"])
     else:
       if not current_day in anon_daily_users_counts.keys():
         anon_daily_users_counts[current_day]=0
@@ -170,14 +171,14 @@ print "\nExporting daily user summaries to CSV..."
 
 wrfile = open("csvs/output/daily-summary/daily-users.csv", 'w')
 writer = csv.writer(wrfile, delimiter=',', quoting=csv.QUOTE_NONNUMERIC,dialect='excel', encoding='utf-8')
-writer.writerow(["date","User ID","Session Number","First Classification","Last Classification", "Classifications in Session"])
+writer.writerow(["date","User IP","User ID","Session Number","First Classification","Last Classification", "Classifications in Session"])
 for day,users_sessions in daily_users.iteritems():
   for user,sessions in users_sessions.iteritems():
     for session_number,session in sessions.iteritems():
       if "last_classification_time" not in session.keys():
         # fix dangling sessions which only had one classification
         session["last_classification_time"] = session["first_classification"]
-      row = [day.strftime('%Y-%m-%d'),user,session_number,session["first_classification"].strftime('%Y-%m-%d %H:%M:%S'),session["last_classification_time"].strftime('%Y-%m-%d %H:%M:%S'),session["classification_count"]]
+      row = [day.strftime('%Y-%m-%d'), session["user_ip"], user, session_number, session["first_classification"].strftime('%Y-%m-%d %H:%M:%S'), session["last_classification_time"].strftime('%Y-%m-%d %H:%M:%S'), session["classification_count"]]
       outrow = []
       for el in row:
         if isinstance(el,str):
