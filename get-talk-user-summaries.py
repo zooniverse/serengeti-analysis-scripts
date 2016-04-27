@@ -33,7 +33,7 @@ completed_page_rows=1
 
 wrfile = open("csvs/output/daily-summary/talk-user-summaries.csv", 'w')
 writer = csv.writer(wrfile, delimiter=',', quoting=csv.QUOTE_NONNUMERIC,dialect='excel', encoding='utf-8')
-writer.writerow(["Thread ID","Comment ID","User ID","Date and Time of Comment","Post Type", "Is A Reply"])
+writer.writerow(["Thread ID","Comment No","User ID","Date and Time of Comment","Post Type", "Is A Reply"])
 
 for ii, discussion in enumerate(discussions_collection.find({"project_id":project_id}, {'focus.base_type':1,'comments.user_name':1,'comments.created_at':1}, no_cursor_timeout=True)):
   completed_page_rows+=1
