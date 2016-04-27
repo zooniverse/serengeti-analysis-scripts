@@ -9,7 +9,7 @@ import os
 import time
 
 if (len(sys.argv) == 2 and sys.argv[1]!="ALL") or (len(sys.argv)==1) or (len(sys.argv) < 3 and sys.argv[1]!="ALL"):
-  print "Usage: python generate-daily-summaries.py ALL \n   or: python generate-daily-summaries.py <start-date-as-yyyy-mm-dd> <end-date-as-yyyy-mm-dd>\n"
+  print "Usage: python get-user-summaries.py ALL \n   or: python generate-daily-summaries.py <start-date-as-yyyy-mm-dd> <end-date-as-yyyy-mm-dd>\n"
   os._exit(-1)
 
 if sys.argv[1]=="ALL":
@@ -72,7 +72,7 @@ sys.stdout.write("%s classifications processed..." % completed_page_rows)
 sys.stdout.flush()
 
 print "\n\nProcessed a total of %s classifications (skipped %s)." % (completed_page_rows,skipped)
-print "\nExporting daily user summaries to CSV..."
+print "\nExporting user summaries to CSV..."
 
 wrfile = open("csvs/output/daily-summary/user-summaries.csv", 'w')
 writer = csv.writer(wrfile, delimiter=',', quoting=csv.QUOTE_NONNUMERIC,dialect='excel', encoding='utf-8')
