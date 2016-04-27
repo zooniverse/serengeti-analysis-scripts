@@ -70,6 +70,7 @@ def initialise_last_classification_records(username, timestamp_of_new_classifica
     last_classification_created_at[current_day][username] = timestamp_of_new_classification
 
 def add_this_to_yesterdays_last_session(username, yest_last, timestamp_of_new_classification):
+  last_classification_created_at[yest_last["yesterday"]][username] = timestamp_of_new_classification
   daily_users[yest_last["yesterday"]][username][yest_last["session_number"]]["last_classification_time"] = timestamp_of_new_classification
   daily_users[yest_last["yesterday"]][username][yest_last["session_number"]]["classification_count"] += 1
 
@@ -79,6 +80,7 @@ def add_this_to_todays_latest_session(username, timestamp_of_new_classification)
     current_session_number = 0
   else:
     current_session_number = next(reversed(daily_users[current_day][username]))
+  last_classification_created_at[current_day][username] = timestamp_of_new_classification
   daily_users[current_day][username][current_session_number]["last_classification_time"] = classification["created_at"]
   daily_users[current_day][username][current_session_number]["classification_count"] += 1
 
@@ -89,6 +91,7 @@ def add_this_to_a_new_session_today(username, timestamp_of_new_classification, u
   else:
     current_session_number = next(reversed(daily_users[current_day][username]))
   new_session_number = current_session_number + 1
+  last_classification_created_at[current_day][username] = timestamp_of_new_classification
   daily_users[current_day][username][new_session_number] = OrderedDict()
   daily_users[current_day][username][new_session_number]["first_classification"] = classification["created_at"]
   daily_users[current_day][username][new_session_number]["classification_count"] = 1
@@ -110,6 +113,8 @@ def store_this_classification(username, current_day, timestamp_of_new_classifica
     if is_within_same_session(last_classification_created_at[current_day][username],timestamp_of_new_classification):
       # extension of previous session - update the session data with a new classification
       add_this_to_todays_latest_session(username, timestamp_of_new_classification)
+    else:
+      is_new_session = True
   if is_new_session:
     add_this_to_a_new_session_today(username, timestamp_of_new_classification, user_ip)
   return is_new_session
