@@ -24,13 +24,13 @@ def restart_line():
   sys.stdout.flush()
 
 def update_user(username, timestamp_of_new_classification, user_ip):
-  if username not in user_summaries.keys():
+  if username not in user_summaries:
     user_summaries[username] = {}
     user_summaries[username]["first_ever_classification"]=timestamp_of_new_classification
     user_summaries[username]["last_ever_classification"]=timestamp_of_new_classification
   else:
     user_summaries[username]["last_ever_classification"]=timestamp_of_new_classification
-  if "user_ips" not in user_summaries[username].keys():
+  if "user_ips" not in user_summaries[username]:
     user_summaries[username]["user_ips"] = [user_ip]
   else:
     if user_ip not in user_summaries[username]["user_ips"]:
@@ -59,11 +59,11 @@ for ii, classification in enumerate(classification_collection.find(find_filter,{
     restart_line()
     sys.stdout.write("%s classifications examined..." % completed_page_rows)
     sys.stdout.flush()
-  if "tutorial" in classification.keys() and classification["tutorial"]==True:
+  if "tutorial" in classification and classification["tutorial"]==True:
     skipped += 1
     continue
   else:
-    if "user_name" in classification.keys():
+    if "user_name" in classification:
       username = classification["user_name"]
       update_user(username, classification["created_at"], classification["user_ip"])
 

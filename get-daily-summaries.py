@@ -42,7 +42,7 @@ def is_within_same_session(previous_timestamp, this_timestamp):
 def get_yesterdays_last_session(username, timestamp_of_new_classification):
   current_day = get_day_of_classification(timestamp_of_new_classification)
   yesterday = get_previous_day(current_day)
-  if yesterday in last_classification_created_at.keys() and username in last_classification_created_at[yesterday].keys():
+  if yesterday in last_classification_created_at and username in last_classification_created_at[yesterday]:
     yesterdays_last_session_number_by_this_user = next(reversed(daily_users[yesterday][username]))
     yesterdays_last_classification_by_this_user = last_classification_created_at[yesterday][username]
     return {
@@ -55,18 +55,18 @@ def get_yesterdays_last_session(username, timestamp_of_new_classification):
     return None
 
 def initialise_daily_user_records(day, username=None, session_number=None):
-  if day not in daily_users.keys():
+  if day not in daily_users:
     daily_users[day] = OrderedDict()
-  if username is not None and username not in daily_users[current_day].keys():
+  if username is not None and username not in daily_users[current_day]:
     daily_users[day][username] = OrderedDict()
-  if session_number is not None and username is not None and session_number not in daily_users[day][username].keys():
+  if session_number is not None and username is not None and session_number not in daily_users[day][username]:
     daily_users[day][username][session_number] = OrderedDict()
 
 def initialise_last_classification_records(username, timestamp_of_new_classification):
   current_day = get_day_of_classification(timestamp_of_new_classification)
-  if current_day not in last_classification_created_at.keys():
+  if current_day not in last_classification_created_at:
     last_classification_created_at[current_day] = OrderedDict()
-  if username is not None and username not in last_classification_created_at[current_day].keys():
+  if username is not None and username not in last_classification_created_at[current_day]:
     last_classification_created_at[current_day][username] = timestamp_of_new_classification
 
 def add_this_to_yesterdays_last_session(username, yest_last, timestamp_of_new_classification):
@@ -76,7 +76,7 @@ def add_this_to_yesterdays_last_session(username, yest_last, timestamp_of_new_cl
 
 def add_this_to_todays_latest_session(username, timestamp_of_new_classification):
   current_day = get_day_of_classification(timestamp_of_new_classification)
-  if len(daily_users[current_day][username].keys())==0:
+  if len(daily_users[current_day][username])==0:
     current_session_number = 0
   else:
     current_session_number = next(reversed(daily_users[current_day][username]))
@@ -99,7 +99,7 @@ def add_this_to_a_new_session_today(username, timestamp_of_new_classification, u
 
 def store_this_classification(username, current_day, timestamp_of_new_classification, user_ip):
   is_new_session = False
-  if current_day not in last_classification_created_at.keys() or username not in last_classification_created_at[current_day].keys():
+  if current_day not in last_classification_created_at or username not in last_classification_created_at[current_day]:
     # first time encountering this user on this day - need to check if user was working right up to midnight yesterday
     yest_last = get_yesterdays_last_session(username, current_day)
     if yest_last is not None and yest_last["still_active"]:
@@ -144,23 +144,23 @@ for ii, classification in enumerate(classification_collection.find(find_filter,{
     sys.stdout.write("%s classifications examined..." % completed_page_rows)
     sys.stdout.flush()
   date_of_this_classification = get_day_of_classification(classification["created_at"])
-  if "tutorial" in classification.keys() and classification["tutorial"]==True:
+  if "tutorial" in classification and classification["tutorial"]==True:
     skipped += 1
     continue
   else:
     if date_of_this_classification != current_day:
-      if current_day in daily_users.keys() and current_day in anon_daily_users_counts.keys():
+      if current_day in daily_users and current_day in anon_daily_users_counts:
         print "\n\nLogged %s daily users for %s (and %s anonymous too)." % (len(daily_users[current_day]),current_day.strftime('%d-%b-%Y'),anon_daily_users_counts[current_day])
       # start of a new day
       current_day = date_of_this_classification
       print "\nProcessing classifications for %s...\n" % current_day.strftime('%d-%b-%Y')
     subject_id = classification["subjects"][0]["zooniverse_id"]
-    if "user_name" in classification.keys():
+    if "user_name" in classification:
       username = classification["user_name"]
       initialise_daily_user_records(current_day,username)
       store_this_classification(username, current_day, classification["created_at"], classification["user_ip"])
     else:
-      if not current_day in anon_daily_users_counts.keys():
+      if not current_day in anon_daily_users_counts:
         anon_daily_users_counts[current_day]=0
       anon_daily_users_counts[current_day] += 1
 
@@ -168,7 +168,7 @@ restart_line()
 sys.stdout.write("%s classifications processed..." % completed_page_rows)
 sys.stdout.flush()
 
-if current_day in daily_users.keys() and current_day in anon_daily_users_counts.keys():
+if current_day in daily_users and current_day in anon_daily_users_counts:
   print "\n\nLogged %s daily users for %s (and %s anonymous too)." % (len(daily_users[current_day]),current_day.strftime('%d-%b-%Y'),anon_daily_users_counts[current_day])
 
 print "\n\nProcessed a total of %s classifications (skipped %s). The latest date examined was %s" % (completed_page_rows,skipped,current_day.strftime('%d-%b-%Y'))
@@ -180,7 +180,7 @@ writer.writerow(["date","User IP","User ID","Session Number","First Classificati
 for day,users_sessions in daily_users.iteritems():
   for user,sessions in users_sessions.iteritems():
     for session_number,session in sessions.iteritems():
-      if "last_classification_time" not in session.keys():
+      if "last_classification_time" not in session:
         # fix dangling sessions which only had one classification
         session["last_classification_time"] = session["first_classification"]
       row = [day.strftime('%Y-%m-%d'), session["user_ip"], user, session_number, session["first_classification"].strftime('%Y-%m-%d %H:%M:%S'), session["last_classification_time"].strftime('%Y-%m-%d %H:%M:%S'), session["classification_count"]]
